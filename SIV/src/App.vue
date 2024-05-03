@@ -8,7 +8,7 @@
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100">
                 <div class="d-flex w-100 justify-content-center">
                   <a href="/" class="pb-3 w-50">
-                      <img alt="Vue logo" class="logo" src="./assets/logo.png" width="125" height="125" />
+                      <img alt="Vue logo" class="logo" src="./assets/logo1.jpn.png" width="120" height="125" />
                   </a>
                 </div>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
