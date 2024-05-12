@@ -55,7 +55,7 @@ setup(){
             }
         },
         {
-            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Acciones</span>",
+            title: "<span class='text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0'>Acciones</span>",
             data: "amount",
             className: "text-center",
             render: function(data) {
