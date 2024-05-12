@@ -5,13 +5,14 @@
       <nav class="navbar navbar-expand-lg bg-dark w-100 m-0 p-0" style="height: 70px !important; z-index: 0; position: absolute;">
       </nav>
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark" style="width: 290px !important; z-index: 1024;">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100" style="height: 100%;">
+              
                 <div class="d-flex w-100 justify-content-center">
                   <a href="/" class="pb-3 w-50">
-                      <img alt="Vue logo" class="logo" src="./assets/logo1.jpn.png" width="120" height="125" />
+                      <img alt="Vue logo" class="logo" src="./assets/logo1.png" width="120" height="125" />
                   </a>
                 </div>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                <ul class="nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
                         <a href="/" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
