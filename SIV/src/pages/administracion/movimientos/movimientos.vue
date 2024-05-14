@@ -35,7 +35,7 @@ setup(){
     const columns = [
         {
             title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Producto</span>",
-            data: "product_id",
+            data: "product_name",
             className: "text-center"
         },
         {
@@ -48,19 +48,6 @@ setup(){
             data: "output",
             className: "text-center"
         },
-        {
-            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Acciones</span>",
-            data: "input",
-            className: "text-center",
-            render: function(data) {
-                let activar = `<div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-primary">Left</button>
-                                <button type="button" class="btn btn-primary">Middle</button>
-                                </div>`;
-
-                return activar;
-            }
-        },
     ];
 
     const reloadDataTable = async () => {
@@ -69,13 +56,19 @@ setup(){
     };
 
     const dataTable = async () => {
-        try {
-            let response = await axios.get('http://localhost:8080/movimientos/todos');
-            data.value = response.data; 
-        } catch (error) {
-            console.error("Error Al Obtener los Movimientos: ", error);
-        }
+    try {
+        let response = await axios.get('http://localhost:8080/movimientos/todos');
+        let productosResponse = await axios.get('http://localhost:8080/productos/todos');
+        
+        data.value = response.data.map(movimiento => ({
+            product_name: productosResponse.data.find(producto => producto.id === movimiento.product_id)?.name,
+            input: movimiento.input,
+            output: movimiento.output
+        }));
+    } catch (error) {
+        console.error("Error Al Obtener los Movimientos: ", error);
     }
+}
 
     onMounted(async() => {
         dataTable();

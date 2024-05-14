@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <form id="formCrear" @submit.prevent="guardar()">
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
+                        <label for="name" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="nombre" v-model="productos.name" required minlength="4" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)">
                     </div>
                     <div class="mb-3">
