@@ -60,7 +60,7 @@ setup(){
         },
         {
             title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Acciones</span>",
-                data: "sa",
+                data: "state",
                 className: "text-center",
                 render: function(data, row, full) {
                     let esilo = (full.state == 'A') ? 'btn-danger' : 'btn-success';
