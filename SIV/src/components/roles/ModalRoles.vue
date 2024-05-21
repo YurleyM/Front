@@ -1,24 +1,16 @@
 <template>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" ref="modalusuarios" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" ref="modalRoles" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Usuario</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Crear rol</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formCrear" @submit.prevent="guardar()">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="name" v-model="usuario.name" required minlength="4" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)">
-                        </div>
-                        <div class="mb-3">
-                            <label for="user" class="form-label">Usuario</label>
-                            <input type="text" class="form-control" id="user" v-model="usuario.user" required minlength="1" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)">
-                        </div>
-                        <div class="mb-3">
-                            <label for="rol_id" class="form-label">Rol</label>
-                            <input type="text" class="form-control" id="rol_id" v-model="usuario.rol_id" required minlength="1" pattern="[0-9]+" title="Ingrese solo números (sin letras)">
+                            <label for="rol" class="form-label">Rol</label>
+                            <input type="text" class="form-control" id="rol" v-model="rol.rol" required minlength="4" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -38,34 +30,34 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 export default defineComponent({
-    name: 'modal-users',
+    name: 'modal-rols',
     props:{
-        users: {}
+        rols: {}
     },
     setup(props, { emit }) {
-        const usuario = ref({});
-        const modalusuarios = ref(null);
+        const rol = ref({});
+        const modalRoles = ref(null);
         const action = ref('');
 
         watchEffect(() => {
-            usuario.value = { ...props.users };
-            usuario.value.edit = (props.users.action == 'editar');
+            rol.value = { ...props.rols }; 
+            rol.value.edit = (props.rols.action == 'editar'); 
         });
-        
+                
         const guardar = async() => {
-            let ruta = (props.users.action == 'editar') ? `editar/${props.users.id}` : 'crear';
-            let peticion = (props.users.action == 'editar') ? axios.put : axios.post;
+            let ruta = (props.rols.action == 'editar') ? `editar/${props.rols.id}` : 'crear';
+            let peticion = (props.rols.action == 'editar') ? axios.put : axios.post;
             try {
-                let response = await peticion(`http://localhost:8080/usuarios/${ruta}`, usuario.value);
+                let response = await peticion(`http://localhost:8080/roles/${ruta}`, rol.value);
 
                 Swal.fire({
                     title: response.data.message.title,
                     text: response.data.message.description,
                     icon: "success"
                 }).then(() => {
-                    hideModal(modalusuarios.value);
+                    hideModal(modalRoles.value);
                     emit('saved');
-                    usuario.value = {};
+                    rol.value = {};
                 });
             } catch (error) {
                 Swal.fire({
@@ -88,8 +80,8 @@ export default defineComponent({
 
         return {
             guardar,
-            usuario,
-            modalusuarios
+            rol,
+            modalRoles
         }
     }
 })

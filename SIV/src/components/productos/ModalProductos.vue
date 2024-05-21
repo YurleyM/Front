@@ -1,4 +1,3 @@
-
 <template>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" ref="modalProductos" aria-hidden="true">
         <div class="modal-dialog">
@@ -10,14 +9,13 @@
             <div class="modal-body">
                 <form id="formCrear" @submit.prevent="guardar()">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" v-model="productos.name" required minlength="4" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" v-model="productos.name">
                     </div>
                     <div class="mb-3">
-                        <label for="amount" class="form-label">Stock</label>
-                        <input type="text" class="form-control" id="amount" v-model="productos.amount" required minlength="1" pattern="[0-9]+" title="Ingrese solo números (sin letras)">
+                        <label for="amount" class="form-label">stock</label>
+                        <input type="text" class="form-control" id="amount" v-model="productos.amount">
                     </div>
-                   
                 </form>
             </div>
             <div class="modal-footer">
@@ -30,22 +28,33 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted, watchEffect } from 'vue';
 import { Modal } from 'bootstrap';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
 export default defineComponent({
     name: 'modal-products',
+    props:{
+        products: {}
+    },
     setup(props, { emit }) {
-        const productos = {};
-        const modalProductos = ref(null)
+        const productos = ref({});
+        const modalProductos = ref(null);
+        const action = ref('');
 
+
+        watchEffect(() => {
+            productos.value = { ...props.products };
+            productos.value.edit = (props.products.action == 'editar');
+        });
+        
         const guardar = async() => {
-            console.log(productos, productos.value)
+            let ruta = (props.products.action == 'editar') ? `editar/${props.products.id}` : 'crear';
+            let peticion = (props.products.action == 'editar') ? axios.put : axios.post;
             try {
-                let response = await axios.post('http://localhost:8080/productos/crear', productos);
-                console.log(response);
+                let response = await peticion(`http://localhost:8080/productos/${ruta}`, productos.value);
+
                 Swal.fire({
                     title: response.data.message.title,
                     text: response.data.message.description,
@@ -58,7 +67,7 @@ export default defineComponent({
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
-                    text: error.message,
+                    text: error.message.description,
                     icon: "error"
                 });
             }

@@ -14,7 +14,7 @@
         />
     </div>
 
-    <ModalProductosVue @saved="reloadDatatable"></ModalProductosVue>
+        <ModalProductosVue v-bind:products="products" @saved="dataTable"></ModalProductosVue>
 </template>
 
 <script>
@@ -26,41 +26,42 @@ import Select from 'datatables.net-select';
 import 'datatables.net-responsive';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-
+ 
 DataTable.use(Select);
 
 export default {
-name: "productos-listing",
-components: {
-    DataTable,
-    ModalProductosVue
-},
-setup(){
-    const data = ref([]);
-    const columns = [
-        {
-            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Nombre</span>",
-            data: "name",
-            className: "text-center"
-        },
-        {
-            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Stock</span>",
-            data: "amount",
-            className: "text-center"
-        },
-        {
-            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Estado</span>",
-            data: "state",
-            className: "text-center",
-            render: function(data) {
-                let mensaje = (data == 'A') ? `<div class="alert alert-success" role="alert">Activo</div>` : `<div class="alert alert-danger" role="alert">Inactivo</div>`;
-
-                return mensaje;
-            }
-        },
-        {
-            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Acciones</span>",
+    name: "productos-listing",
+    components: {
+        DataTable,
+        ModalProductosVue
+    },
+    setup(){
+        const data = ref([]);
+        let products = ref({});
+        const columns = [
+            {
+                title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Nombre</span>",
+                data: "name",
+                className: "text-center"
+            },
+            {
+                title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Stock</span>",
+                data: "amount",
+                className: "text-center"
+            },
+            {
+                title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Estado</span>",
                 data: "state",
+                className: "text-center",
+                render: function(data) {
+                    let mensaje = (data == 'A') ? `<div class="alert alert-success" role="alert">Activo</div>` : `<div class="alert alert-danger" role="alert">Inactivo</div>`;
+
+                    return mensaje;
+                }
+            },
+            {
+                title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Acciones</span>",
+                data: "amount",
                 className: "text-center",
                 render: function(data, row, full) {
                     let esilo = (full.state == 'A') ? 'btn-danger' : 'btn-success';
@@ -69,24 +70,27 @@ setup(){
                             <i class="button bi bi-shield-fill-x"></i>
                         </a>`;
 
-                    return activar;
-            }
-        },
-    ];
+                        let editar = `<a href="javascript:void(0)" data-id="${full.id}" data-nombre="${full.name}" data-amount="${full.amount}" data-action="editar" title="Editar" class="btn btn-primary button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="bi bi-pencil-square button"></i>
+                    </a>`;
 
-    const getAction = (event) => {
+                    return `<div class="btn-group">${activar}${editar}</div>`;
+                }
+            },
+        ];
+
+        const getAction = (event) => {
             let target = event.target;
             const id = ref(0);
             
             if(target.classList.contains('button')){
                 let dataEdit = (target.parentNode.tagName == 'A') ? target.parentNode.dataset : target.dataset;
 
-                switchCase(dataEdit.action, dataEdit.id);
+                switchCase(dataEdit.action, dataEdit.id, dataEdit.nombre, dataEdit.amount);
             }
         }
 
         const reloadDataTable = async () => {
-            
             await dataTable();
         };
 
@@ -99,11 +103,16 @@ setup(){
             }
         }; 
 
-        const switchCase = (action, id) => {
+        const switchCase = (action, id, nombre, amount) => {
             switch (action) {
                 case 'estado':
                     return cambiarEstado(id);
-            
+                case 'editar':
+                    products.value.id = id;
+                    products.value.name = nombre;
+                    products.value.amount = amount;
+                    products.value.action = action;
+                    break;            
                 default:
                     break;
             }
@@ -153,8 +162,10 @@ setup(){
 
         return {
             data,
+            products,
             columns,
             reloadDataTable,
+            dataTable,
             getAction
         }
     }
