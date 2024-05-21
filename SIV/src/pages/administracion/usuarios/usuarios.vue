@@ -14,7 +14,7 @@
         />
     </div>
 
-    <ModalUsuariosVue @saved="reloadDatatable"></ModalUsuariosVue>
+    <ModalUsuariosVue v-bind:users="users" @saved="dataTable"></ModalUsuariosVue>
 </template>
 
 <script>
@@ -37,6 +37,7 @@ components: {
 },
 setup(){
     const data = ref([]);
+    let users = ref({});
     const columns = [
         {
             title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Nombre</span>",
@@ -69,7 +70,11 @@ setup(){
                             <i class="button bi bi-shield-fill-x"></i>
                         </a>`;
 
-                    return activar;
+                        let editar = `<a href="javascript:void(0)" data-id="${full.id}" data-nombre="${full.name}" data-user="${full.user}" data-action="editar" title="Editar" class="btn btn-primary button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="bi bi-pencil-square button"></i>
+                    </a>`;
+
+                return `<div class="btn-group">${activar}${editar}</div>`;
             }
         },
     ];
@@ -81,7 +86,7 @@ setup(){
             if(target.classList.contains('button')){
                 let dataEdit = (target.parentNode.tagName == 'A') ? target.parentNode.dataset : target.dataset;
 
-                switchCase(dataEdit.action, dataEdit.id);
+                switchCase(dataEdit.action, dataEdit.id, dataEdit.nombre, dataEdit.user);
             }
         }
 
@@ -99,11 +104,16 @@ setup(){
             }
         }; 
 
-        const switchCase = (action, id) => {
+        const switchCase = (action, id, nombre, user) => {
             switch (action) {
                 case 'estado':
                     return cambiarEstado(id);
-            
+                case 'editar':
+                    users.value.id = id;
+                    users.value.name = nombre;
+                    users.value.user = user;
+                    users.value.action = action;
+                    break;            
                 default:
                     break;
             }
@@ -154,7 +164,9 @@ setup(){
         return {
             data,
             columns,
+            users,
             reloadDataTable,
+            dataTable,
             getAction
         }
     }
