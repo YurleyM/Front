@@ -108,7 +108,7 @@
   </script>
   
   <style>
-  /* Mantén tus estilos como están */
+  
   </style>
   
   <style>

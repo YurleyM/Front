@@ -38,11 +38,11 @@
                   </ul>
                   <hr>
                   <div class="d-flex justify-content-center w-100 mb-4">
-                    <button type="button" class="btn btn-secondary">Cerrar Sesión</button>
+                    <button type="button" class="btn btn-secondary" @click="cerrarSesion">Cerrar Sesión</button>
                   </div>
               </div>
           </div>
-          <div class="col py-3 w-100 h-100 d-flex justify-content-center card m-5" style="margin-top: 3cm !important;">
+          <div class="col py-3 w-00 h-100 d-flex justify-content-center card m-5" style="margin-top: 3cm !important;">
             <div class="card-body">
               <RouterView />
             </div>
@@ -50,3 +50,22 @@
       </div>
   </div>
   </template>
+
+<script>
+import { useAuthStore } from "@/stores/auth";
+
+export default {
+  methods: {
+    cerrarSesion() {
+      
+      const authStore = useAuthStore();
+
+      
+      authStore.logout();
+
+     
+      this.$router.push({ name: "sign-in" });
+    },
+  },
+};
+</script>

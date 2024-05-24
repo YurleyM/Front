@@ -52,8 +52,8 @@ router.beforeEach((to, from, next) => {
     document.title = `SIV`;
     
     // authStore.verifyAuth();
-  
-    if (to.meta.middleware == "auth") {
+    console.log(to.meta.middleware )
+    if (!to.meta.middleware == "auth") {
       if (authStore.isAuthenticated) {
         next();
       } else {
