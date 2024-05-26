@@ -2,9 +2,9 @@
     <div @click="getAction($event, id)">
         <div class="d-flex justify-content-between" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <h2>
-                roles
+                Roles
             </h2>
-            <button class="btn btn-primary">Crear Usuario</button>
+            <button class="btn btn-primary">Crear Rol</button>
         </div>
 
         <DataTable
@@ -19,8 +19,8 @@
 
 <script>
 import axios from 'axios';
+import ModalRolesVue from '../../../components/roles/ModalRoles.vue'
 import { onMounted, ref } from 'vue';
-import ModalRoles from '../../../components/roles/ModalRoles.vue';
 import DataTable from 'datatables.net-vue3'
 import Select from 'datatables.net-select';
 import 'datatables.net-responsive';
@@ -30,17 +30,18 @@ import 'sweetalert2/src/sweetalert2.scss';
 DataTable.use(Select);
 
 export default {
-name: "roles-listing",
+name: "Roles-listing",
 components: {
     DataTable,
-    ModalRoles
+    ModalRolesVue
 },
 setup(){
     const data = ref([]);
-    let users = ref({});
+    let rols = ref({});
     const columns = [
+        
         {
-            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Rol</span>",
+            title: "<span class='text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0'>Nombre</span>",
             data: "rol",
             className: "text-center"
         },
@@ -65,7 +66,7 @@ setup(){
                             <i class="button bi bi-shield-fill-x"></i>
                         </a>`;
 
-                        let editar = `<a href="javascript:void(0)" data-id="${full.id}" data-nombre="${full.rol}"  data-action="editar" title="Editar" class="btn btn-primary button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        let editar = `<a href="javascript:void(0)" data-id="${full.id}" data-nombre="${full.rol}" data-action="editar" title="Editar" class="btn btn-primary button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <i class="bi bi-pencil-square button"></i>
                     </a>`;
 
@@ -99,14 +100,14 @@ setup(){
             }
         }; 
 
-        const switchCase = (action, id, nombre, user) => {
+        const switchCase = (action, id, nombre) => {
             switch (action) {
                 case 'estado':
                     return cambiarEstado(id);
                 case 'editar':
-                    users.value.id = id;
-                    users.value.rol = nombre;
-                    users.value.action = action;
+                    rols.value.id = id;
+                    rols.value.rol = nombre;
+                    rols.value.action = action;
                     break;            
                 default:
                     break;
@@ -158,7 +159,7 @@ setup(){
         return {
             data,
             columns,
-            users,
+            rols,
             reloadDataTable,
             dataTable,
             getAction

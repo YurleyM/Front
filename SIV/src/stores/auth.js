@@ -34,10 +34,21 @@ export const useAuthStore = defineStore("auth", () => {
   function login(credentials) {
     return ApiService.post("http://localhost:8080/login/login", credentials)
       .then(({ data }) => {
-        setAuth(data);
+        if (data) {
+          setAuth(data);
+        } else {
+          return Promise.reject(new Error("Usuario no encontrado"));
+        }
       })
-      .catch(({ response }) => {
-        setError(response.data.errors ?? response.data.message);
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setError("Usuario no encontrado");
+        } else if (error.response && error.response.data && error.response.data.errors) {
+          setError(error.response.data.errors);
+        } else {
+          setError("Error de inicio de sesión");
+        }
+        return Promise.reject(error); // Rechazar la promesa con el error
       });
   }
 
