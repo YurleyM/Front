@@ -1,111 +1,134 @@
 <template>
-    <!--begin::Wrapper-->
-    <div class="d-flex justify-content-center align-items-center w-lg-500px p-10">
-      <!--begin::Logo-->
-      <div class="screen-1">
-        <div class="d-flex flex-column justify-content-center align-items-center" width="80" height="80">
-          <img alt="Vue logo" class="logo w-50 h-50 m-5" src="../../assets/logo1.png" viewbox="0 0 640 480" />
-        </div>
-  
-        <form @submit.prevent="onSubmitLogin">
-          <div class="email">
-            <label for="user">Usuario</label>
-            <div class="sec-2">
-              <ion-icon name="mail-outline"></ion-icon>
-              <input v-model="user" type="text" name="user" placeholder="user"/>
-            </div>
-          </div>
-          <div class="password">
-            <label for="password">Contraseña</label>
-            <div class="sec-2">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              <input v-model="password" class="pas" type="password" name="password" placeholder="············"/>
-              <ion-icon class="show-hide" name="eye-outline"></ion-icon>
-            </div>
-          </div>
-          <button ref="submitButton" class="login">Login</button>
-        </form>
+  <!--begin::Wrapper-->
+  <div class="d-flex justify-content-center align-items-center w-lg-500px p-10">
+    <!--begin::Logo-->
+    <div class="screen-1">
+      <div class="d-flex flex-column justify-content-center align-items-center" width="80" height="80">
+        <img alt="Vue logo" class="logo w-50 h-50 m-5" src="../../assets/logo1.png" viewbox="0 0 640 480" />
       </div>
-      <!--end::Logo-->
+
+      <form @submit.prevent="onSubmitLogin">
+        <div class="email">
+          <label for="user">Usuario</label>
+          <div class="sec-2">
+            <ion-icon name="mail-outline"></ion-icon>
+            <input v-model="user" type="text" name="user" placeholder=""/>
+          </div>
+        </div>
+        <div class="password">
+          <label for="password">Contraseña</label>
+          <div class="sec-2">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            <input v-model="password" class="pas" type="password" name="password" placeholder=""/>
+            <ion-icon class="show-hide" name="eye-outline"></ion-icon>
+          </div>
+        </div>
+        <button ref="submitButton" class="login">Login</button>
+      </form>
     </div>
-    <!--end::Wrapper-->
-  </template>
-  
-  <script>
-  import { ref } from "vue";
-  import { useAuthStore } from "@/stores/auth";
-  import { useRouter } from "vue-router";
-  import Swal from "sweetalert2/dist/sweetalert2.js";
-  
-  export default {
-    name: "sign-in",
-  
-    setup() {
-      const store = useAuthStore();
-      const router = useRouter();
-  
-      const user = ref("");
-      const password = ref("");
-      const submitButton = ref(null);
-  
-      //Form submit function
-      const onSubmitLogin = async () => {
-        const values = { user: user.value, password: password.value };
-  
-        if (submitButton.value) {
-          submitButton.value.disabled = true;
-          submitButton.value.setAttribute("data-kt-indicator", "on");
-        }
-  
+    <!--end::Logo-->
+  </div>
+  <!--end::Wrapper-->
+</template>
+
+<script>
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+
+export default {
+  name: "sign-in",
+
+  setup() {
+    const store = useAuthStore();
+    const router = useRouter();
+
+    const user = ref("");
+    const password = ref("");
+    const submitButton = ref(null);
+
+    const onSubmitLogin = async () => {
+    if (!user.value || !password.value) {
+        Swal.fire({
+            text: "Por favor ingrese un usuario y una contraseña.",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "OK",
+            heightAuto: false,
+            customClass: {
+                confirmButton: "btn fw-semibold btn-light-danger",
+            },
+        });
+        return;
+    }
+
+    const values = { user: user.value, password: password.value };
+
+    if (submitButton.value) {
+        submitButton.value.disabled = true;
+        submitButton.value.setAttribute("data-kt-indicator", "on");
+    }
+
+    try {
         // Send login request
         await store.login(values);
-        const error = Object.values(store.errors);
-  
-        if (error.length === 0) {
-          Swal.fire({
+
+        Swal.fire({
             text: "Logueo Correcto!",
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Continuar!",
             heightAuto: false,
             customClass: {
-              confirmButton: "btn fw-semibold btn-light-primary",
+                confirmButton: "btn fw-semibold btn-light-primary",
             },
-          }).then(() => {
+        }).then(() => {
             // Go to page after successfully login
             router.push("/inicio");
-          });
+        });
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            Swal.fire({
+                text: "Usuario no encontrado",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Intentarlo Nuevamente",
+                heightAuto: false,
+                customClass: {
+                    confirmButton: "btn fw-semibold btn-light-danger",
+                },
+            });
         } else {
-          store.logout();
-  
-          Swal.fire({
-            text: error[0],
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Intentarlo Nuevamente!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semibold btn-light-danger",
-            },
-          }).then(() => {
-            store.errors = {};
-          });
+            Swal.fire({
+                text: "Error de inicio de sesión",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "OK",
+                heightAuto: false,
+                customClass: {
+                    confirmButton: "btn fw-semibold btn-light-danger",
+                },
+            });
         }
-  
-        //Deactivate indicator
-        submitButton.value?.removeAttribute("data-kt-indicator");
-        submitButton.value.disabled = false;
-      };
-  
-      return {
-        user,
-        password,
-        onSubmitLogin,
-        submitButton,
-      };
-    },
-  };
-  </script>
+    } finally {
+        //Desactivar indicador
+        if (submitButton.value) {
+            submitButton.value.removeAttribute("data-kt-indicator");
+            submitButton.value.disabled = false;
+        }
+    }
+};
+
+    return {
+      user,
+      password,
+      onSubmitLogin,
+      submitButton,
+    };
+  },
+};
+</script>
   
   <style>
   
@@ -122,8 +145,6 @@
         -ms-user-select: none;
             user-select: none;
     overflow-y: hidden;
-    display: flex;
-    justify-content: center;
     align-items: center;
     background: #dde5f4;
     height: 100vh;

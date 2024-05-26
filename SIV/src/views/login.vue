@@ -2,13 +2,13 @@
   <div class="login">
     <h1 class="title">Login in the page</h1>
     <form action class="form">
-      <label class="form-label" for="#email">Email:</label>
+      <label class="form-label" for="#email">User:</label>
       <input
         class="form-input"
-        type="email"
-        id="email"
+        type="user"
+        id="user"
         required
-        placeholder="Email"
+        placeholder="User"
       />
       <label class="form-label" for="#password">Password:</label>
       <input

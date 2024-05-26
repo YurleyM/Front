@@ -1,15 +1,15 @@
 <template>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" ref="modalRoles" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" ref="modalroles" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Crear rol</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Rol</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formCrear" @submit.prevent="guardar()">
                         <div class="mb-3">
-                            <label for="rol" class="form-label">Rol</label>
+                            <label for="name" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="rol" v-model="rol.rol" required minlength="4" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)">
                         </div>
                         <div class="modal-footer">
