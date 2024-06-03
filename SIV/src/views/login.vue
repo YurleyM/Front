@@ -2,7 +2,7 @@
   <div class="login">
     <h1 class="title">Login in the page</h1>
     <form action class="form">
-      <label class="form-label" for="#email">User:</label>
+      <label class="form-label" for="#user">User:</label>
       <input
         class="form-input"
         type="user"

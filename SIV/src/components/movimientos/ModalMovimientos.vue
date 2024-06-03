@@ -82,7 +82,8 @@ export default defineComponent({
         const getproducts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/productos/todos');
-                products.value = response.data;
+                // Filtrar solo los productos activos (estado A)
+                products.value = response.data.filter(producto => producto.state === 'A');
             } catch (error) {
                 console.error("Error al obtener los productos: ", error);
             }

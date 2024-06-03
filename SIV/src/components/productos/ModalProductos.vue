@@ -8,13 +8,13 @@
             </div>
             <div class="modal-body">
                 <form id="formCrear" @submit.prevent="guardar()">
-                    <div class="mb-3">
+                    <div class="mb-3"> 
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" v-model="productos.name">
+                        <input type="text" class="form-control" id="nombre" v-model="productos.name" required minlength="4" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)" autocomplete="name">
                     </div>
                     <div class="mb-3">
                         <label for="amount" class="form-label">stock</label>
-                        <input type="text" class="form-control" id="amount" v-model="productos.amount">
+                        <input type="text" class="form-control" id="amount" v-model="productos.amount" required minlength="1" pattern="[0-9]+" title="Ingrese solo números (sin letras)">
                     </div>
                 </form>
             </div>

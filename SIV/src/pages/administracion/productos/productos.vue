@@ -1,35 +1,39 @@
 <template>
-    <div @click="getAction($event, id)">
-        <div class="d-flex justify-content-between" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <h2>
-                Productos
-            </h2>
-            <button class="btn btn-primary">Crear Producto</button>
-        </div>
-
-        <DataTable
-            :columns="columns"
-            :data = "data"
-            class="table table-hover w-50"            
-        />
+    <div class="container">
+      <div @click="getAction($event, id)">
+          <div class="d-flex justify-content-between" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <h2>
+                  Productos
+              </h2>
+              <button class="btn btn-primary">Crear Producto</button>
+          </div>
+  
+          <div class="scrollable-table">
+            <DataTable
+                :columns="columns"
+                :data="data"
+                class="table table-hover w-50"            
+            />
+          </div>
+      </div>
+  
+      <ModalProductosVue v-bind:products="products" @saved="dataTable"></ModalProductosVue>
     </div>
-
-        <ModalProductosVue v-bind:products="products" @saved="dataTable"></ModalProductosVue>
-</template>
-
-<script>
-import axios from 'axios';
-import ModalProductosVue from '../../../components/productos/ModalProductos.vue'
-import { onMounted, ref } from 'vue';
-import DataTable from 'datatables.net-vue3'
-import Select from 'datatables.net-select';
-import 'datatables.net-responsive';
-import Swal from 'sweetalert2';
-import 'sweetalert2/src/sweetalert2.scss';
- 
-DataTable.use(Select);
-
-export default {
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  import ModalProductosVue from '../../../components/productos/ModalProductos.vue'
+  import { onMounted, ref } from 'vue';
+  import DataTable from 'datatables.net-vue3'
+  import Select from 'datatables.net-select';
+  import 'datatables.net-responsive';
+  import Swal from 'sweetalert2';
+  import 'sweetalert2/src/sweetalert2.scss';
+   
+  DataTable.use(Select);
+  
+  export default {
     name: "productos-listing",
     components: {
         DataTable,
@@ -55,7 +59,7 @@ export default {
                 className: "text-center",
                 render: function(data) {
                     let mensaje = (data == 'A') ? `<div class="alert alert-success" role="alert">Activo</div>` : `<div class="alert alert-danger" role="alert">Inactivo</div>`;
-
+  
                     return mensaje;
                 }
             },
@@ -65,35 +69,35 @@ export default {
                 className: "text-center",
                 render: function(data, row, full) {
                     let esilo = (full.state == 'A') ? 'btn-danger' : 'btn-success';
-
+  
                     let activar = `<a href="javascript:void(0)" data-id="${full.id}" data-nombre="${full.name}" data-action="estado" title="Cambio de estado" class="button btn ${esilo}">
                             <i class="button bi bi-shield-fill-x"></i>
                         </a>`;
-
+  
                         let editar = `<a href="javascript:void(0)" data-id="${full.id}" data-nombre="${full.name}" data-amount="${full.amount}" data-action="editar" title="Editar" class="btn btn-primary button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <i class="bi bi-pencil-square button"></i>
                     </a>`;
-
+  
                     return `<div class="btn-group">${activar}${editar}</div>`;
                 }
             },
         ];
-
+  
         const getAction = (event) => {
             let target = event.target;
             const id = ref(0);
             
             if(target.classList.contains('button')){
                 let dataEdit = (target.parentNode.tagName == 'A') ? target.parentNode.dataset : target.dataset;
-
+  
                 switchCase(dataEdit.action, dataEdit.id, dataEdit.nombre, dataEdit.amount);
             }
         }
-
+  
         const reloadDataTable = async () => {
             await dataTable();
         };
-
+  
         const dataTable = async () => {
             try {
                 let response = await axios.get('http://localhost:8080/productos/todos');
@@ -102,7 +106,7 @@ export default {
                 console.error("Error Al Obtener los productos: ", error);
             }
         }; 
-
+  
         const switchCase = (action, id, nombre, amount) => {
             switch (action) {
                 case 'estado':
@@ -117,11 +121,11 @@ export default {
                     break;
             }
         }
-
+  
         const cambiarEstado = async (id) => {
             Swal.fire({
-                title: "¿Esta Seguro De Cambiar De Estado?",
-                text: "Podra Cambiar El Estado En Un Futuro!",
+                title: "¿Esta seguro de cambiar de estado?",
+                text: "Podra cambiar el estado en un futuro!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -134,14 +138,14 @@ export default {
                                                     console.log(error)
                                                     mensajes('error', error.code, error.message);
                                                 });
-
+  
                     mensajes('success', 'Cambio de estado exitoso', 'Se realizó el cambio de estado');
                     reloadDataTable();
                     
                 }
             });
         }
-
+  
         const mensajes = (icon, title, description) => {
             Swal.fire({
                 icon: icon,
@@ -155,11 +159,11 @@ export default {
                 }
             });
         }
-
+  
         onMounted(async() => {
             dataTable();
         });
-
+  
         return {
             data,
             products,
@@ -169,9 +173,14 @@ export default {
             getAction
         }
     }
-}
-</script>
-
-<style>
-@import 'datatables.net-dt';
-</style>
+  }
+  </script>
+  
+  <style>
+  @import 'datatables.net-dt';
+  
+  .scrollable-table {
+    max-height: 400px; 
+    overflow-y: auto; 
+  }
+  </style>

@@ -3,6 +3,7 @@ import productos from '@/pages/administracion/productos/productos.vue';
 import usuarios from '@/pages/administracion/usuarios/usuarios.vue';
 import roles from '@/pages/administracion/roles/roles.vue';
 import movimientos from '@/pages/administracion/movimientos/movimientos.vue';
+import dashboard from '@/pages/administracion/dashboard/dashboard.vue';
 import App from '@/App.vue';
 import { useAuthStore } from "@/stores/auth";
 import DefaultLayout from '@/components/layouts/defaultLayout.vue';
@@ -23,6 +24,7 @@ const routes = [
             { path: '/usuarios', component: usuarios },
             { path: '/roles', component: roles },
             { path: '/movimientos', component: movimientos },
+            { path: '/dashboard', component: dashboard },
         ]
     } ,
     {
@@ -51,7 +53,7 @@ router.beforeEach((to, from, next) => {
   
     document.title = `SIV`;
     
-    // authStore.verifyAuth();
+    authStore.verifyAuth();
     console.log(to.meta.middleware )
     if (!to.meta.middleware == "auth") {
       if (authStore.isAuthenticated) {
