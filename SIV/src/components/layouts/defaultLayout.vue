@@ -29,6 +29,9 @@
                               <li>
                                   <a href="/usuarios" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span></a>
                               </li>
+                              <li>
+                                  <a href="/dashboard" class="nav-link px-0"> <span class="d-none d-sm-inline">Dashboard</span></a>
+                              </li>
                           </ul>
                       </li>
                       <li>

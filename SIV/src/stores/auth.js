@@ -9,15 +9,21 @@ export const useAuthStore = defineStore("auth", () => {
   const isAuthenticated = ref(false);
 
   function setAuth(authUser) {
+    console.log("setAuth called with:", authUser);
+    if (!authUser.api_token) {
+      console.error("Token no encontrado en la respuesta del servidor");
+      return;
+    }
     isAuthenticated.value = true;
-    console.log(authUser, isAuthenticated.value);
+    console.log("Usuario autenticado:", isAuthenticated.value);
     user.value = authUser;
     errors.value = {};
     JwtService.saveToken(user.value.api_token);
+    console.log("Token guardado:", user.value.api_token);
   }
 
   function setError(error) {
-    if (typeof error === 'string') {
+    if (typeof error === 'String') {
       errors.value = { general: [error] };
     } else {
       errors.value = { ...error };
@@ -67,8 +73,8 @@ export const useAuthStore = defineStore("auth", () => {
       });
   }
 
-  function forgotPassword(email) {
-    return ApiService.post("forgot_password", email)
+  function forgotPassword(user) {
+    return ApiService.post("forgot_password", user)
       .then(() => {
         setError({});
       })

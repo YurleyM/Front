@@ -16,10 +16,7 @@
                             <label for="user" class="form-label">Usuario</label>
                             <input type="text" class="form-control" id="user" v-model="usuario.user" required minlength="1" pattern="[A-Za-z\s]+" title="Ingrese solo letras (sin números)">
                         </div>
-                        <div class="mb-3">
-                            <label for="rol_id" class="form-label">Rol</label>
-                            <input type="text" class="form-control" id="rol_id" v-model="usuario.rol_id" required minlength="1" pattern="[0-9]+" title="Ingrese solo números (sin letras)">
-                        </div>
+                        
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Guardar</button>

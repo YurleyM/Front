@@ -8,7 +8,7 @@
       </div>
 
       <form @submit.prevent="onSubmitLogin">
-        <div class="email">
+        <div class="user">
           <label for="user">Usuario</label>
           <div class="sec-2">
             <ion-icon name="mail-outline"></ion-icon>
@@ -88,6 +88,7 @@ export default {
             router.push("/inicio");
         });
     } catch (error) {
+      console.log(error);
         if (error.response && error.response.status === 404) {
             Swal.fire({
                 text: "Usuario no encontrado",
@@ -162,7 +163,7 @@ export default {
   .screen-1 .logo {
     margin-top: -3em;
   }
-  .screen-1 .email {
+  .screen-1 .user {
     background: white;
     box-shadow: 0 0 2em #e6e9f9;
     padding: 1em;
@@ -173,23 +174,23 @@ export default {
     color: #4d4d4d;
     margin-top: -3em;
   }
-  .screen-1 .email input {
+  .screen-1 .user input {
     outline: none;
     border: none;
   }
-  .screen-1 .email input::-moz-placeholder {
+  .screen-1 .user input::-moz-placeholder {
     color: black;
     font-size: 0.9em;
   }
-  .screen-1 .email input:-ms-input-placeholder {
+  .screen-1 .user input:-ms-input-placeholder {
     color: black;
     font-size: 0.9em;
   }
-  .screen-1 .email input::placeholder {
+  .screen-1 .user input::placeholder {
     color: black;
     font-size: 0.9em;
   }
-  .screen-1 .email ion-icon {
+  .screen-1 .user ion-icon {
     color: #4d4d4d;
     margin-bottom: -0.2em;
   }

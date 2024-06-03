@@ -17,7 +17,7 @@
   
           <!--begin::Link-->
           <div class="text-gray-500 fw-semibold fs-4">
-            Enter your email to reset your password.
+            Enter your user to reset your password.
           </div>
           <!--end::Link-->
         </div>
@@ -25,17 +25,17 @@
   
         <!--begin::Input group-->
         <div class="fv-row mb-10">
-          <label class="form-label fw-bold text-gray-900 fs-6">Email</label>
+          <label class="form-label fw-bold text-gray-900 fs-6">user</label>
           <Field
             class="form-control form-control-solid"
-            type="email"
+            type="user"
             placeholder=""
-            name="email"
+            name="user"
             autocomplete="off"
           />
           <div class="fv-plugins-message-container">
             <div class="fv-help-block">
-              <ErrorMessage name="email" />
+              <ErrorMessage name="user" />
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
   
       // Create form validation object
       const forgotPassword = Yup.object().shape({
-        email: Yup.string().email().required().label("Email"),
+        user: Yup.string().user().required().label("user"),
       });
   
       // Form submit function

@@ -7,12 +7,15 @@
             <button class="btn btn-primary">Crear Usuario</button>
         </div>
 
-        <DataTable
-            :columns="columns"
-            :data = "data"
-            class="table table-hover w-50"            
-        />
+        <div class="scrollable-table">
+          <DataTable
+              :columns="columns"
+              :data = "data"
+              class="table table-hover w-50"            
+          />
+        </div>
     </div>
+    
 
     <ModalUsuariosVue v-bind:users="users" @saved="dataTable"></ModalUsuariosVue>
 </template>
@@ -121,8 +124,8 @@ setup(){
 
         const cambiarEstado = async (id) => {
             Swal.fire({
-                title: "¿Esta Seguro De Cambiar De Estado?",
-                text: "Podra Cambiar El Estado En Un Futuro!",
+                title: "¿Esta seguro de cambiar de estado?",
+                text: "Podra cambiar el estado en un futuro!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -175,4 +178,8 @@ setup(){
 
 <style>
 @import 'datatables.net-dt';
+.scrollable-table {
+      max-height: 400px; 
+      overflow-y: auto; 
+    }
 </style>
