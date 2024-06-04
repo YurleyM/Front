@@ -15,7 +15,7 @@
             />
         </div>
         
-        <ModalMovimientosVue v-bind:movements="movements" @saved="dataTable"></ModalMovimientosVue>
+        <ModalMovimientosVue v-bind:movements="movements" @saved="reloadDataTable"></ModalMovimientosVue>
     </div>
 </template>
 
@@ -63,11 +63,32 @@ export default {
             try {
                 let response = await axios.get('http://localhost:8080/movimientos/todos');
                 let productosResponse = await axios.get('http://localhost:8080/productos/todos');
-                data.value = response.data.map(movimiento => ({
-                    product_name: productosResponse.data.find(producto => producto.id === movimiento.product_id)?.name,
-                    input: movimiento.input,
-                    output: movimiento.output
-                }));
+
+                // Agrupar los movimientos por producto
+                const groupedMovimientos = {};
+
+                response.data.forEach(movimiento => {
+                    const productId = movimiento.product_id;
+
+                    if (!groupedMovimientos[productId]) {
+                        groupedMovimientos[productId] = {
+                            product_name: productosResponse.data.find(producto => producto.id === movimiento.product_id)?.name,
+                            input: 0,
+                            output: 0
+                        };
+                    }
+
+                    if (movimiento.input !== null) {
+                        groupedMovimientos[productId].input += movimiento.input;
+                    }
+                    
+                    if (movimiento.output !== null) {
+                        groupedMovimientos[productId].output += movimiento.output;
+                    }
+                });
+
+                data.value = Object.values(groupedMovimientos);
+
             } catch (error) {
                 console.error("Error Al Obtener los Movimientos: ", error);
             }
